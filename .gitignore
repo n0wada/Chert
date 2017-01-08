@@ -1,0 +1,4 @@
+composer.lock
+vendor
+work
+phpunit-5.7.4.phar
