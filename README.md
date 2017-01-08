@@ -63,7 +63,7 @@ You need to implements Doctrine\Common\Cache\Cache Interface.
 Chert uses Composer to install and update:
 
 ```
-composer require nowada/Chert
+composer require n0wada/chert
 ```
 
 ## Licence
