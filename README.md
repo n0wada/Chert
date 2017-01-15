@@ -1,12 +1,39 @@
 Chert
 ====
 
-It is a simple routing library using annotations and caching.
+It's an alternative to ControllerProvider for Silex application, using annotations and caching.
+
+
+## Install
+
+Chert uses Composer to install and update:
+
+```
+  "require": {
+      n0wada/chert dev-master
+  }
+```
+
+## Parameters
+
+### chert.cache_dir
+The cache directory. This library save RouteCollection Object there.  
+If you use FilesystemCache(default), This Parameter is required. 
+
+### chert.cache_lifetime
+The lifetime in number of seconds for this cache entry. default lifetime is 0.
+
+### chert.controller_dirs
+It is an array of pairs of namespace and directory.
+
+### chert.cache
+If you want to use ApcCache, MemCached, Redis etc., you can set Cache Object here.  
+You need to implements Doctrine\Common\Cache\Cache Interface.
 
 
 ## Usage
 
-Resister Provider in your application.
+Resister Provider in your Silex application.
 ```php
 $app = new \Silex\Application();
  
@@ -18,7 +45,7 @@ $app->register(new \Chert\RouteCompileServiceProvider(),[
 $app->run();
 ```
 
-A controller example
+Set up Routing in your Controller.
 ```php
 namespace Test\Controller;
  
@@ -40,30 +67,6 @@ class TestController
         return new JsonResponse($id);
     }
 }
-```
-
-## Parameters
-
-### chert.cache_dir
-The cache directory. This library save RouteCollection Object there.  
-If you use FilesystemCache(default), This Parameter is required. 
-
-### chert.cache_lifetime
-The lifetime in number of seconds for this cache entry. default lifetime is 0.
-
-### chert.controller_dirs
-It is an array of pairs of namespace and dir.
-
-### chert.cache
-If you want to use ApcCache, MemCached, Redis etc., you can set Cache Object here.  
-You need to implements Doctrine\Common\Cache\Cache Interface.
-
-## Install
-
-Chert uses Composer to install and update:
-
-```
-composer require n0wada/chert
 ```
 
 ## Licence

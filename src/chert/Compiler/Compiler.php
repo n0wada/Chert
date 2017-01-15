@@ -10,12 +10,12 @@
 
 namespace Chert\Compiler;
 
-use Pimple\Container;
-use Silex\Application;
+use Chert\Annotation\RouteAbstract;
+use Chert\Annotation\RouteModifier;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Annotations\Reader;
-use Chert\Annotation\RouteModifier;
-use Chert\Annotation\RouteAbstract;
+use Pimple\Container;
+use Silex\Application;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -67,6 +67,7 @@ class Compiler
             }
 
             foreach ($routes as $route) {
+
                 $this->routing($route);
             }
         }
@@ -107,48 +108,47 @@ class Compiler
 
     /**
      * @param \ReflectionClass $class
-     * @param RouteCollection $routes
-     * @return RouteCollection $routes
+     * @param RouteCollection $routeCollection
+     * @return RouteCollection
      */
-    protected function compile(\ReflectionClass $class, RouteCollection $routes)
+    protected function compile(\ReflectionClass $class, RouteCollection $routeCollection)
     {
         $annotations = $this->reader->getClassAnnotations($class);
 
-        $cRoute = $this->filter($annotations, RouteAbstract::class);
+        $cRoutes = $this->filter($annotations, RouteAbstract::class) ?: [new RouteAbstract()];
         $cModifiers = $this->filter($annotations, RouteModifier::class);
 
-        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($cRoutes as $cRoute) {
 
-            $annotations = $this->reader->getMethodAnnotations($method);
+            foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 
-            $route = $this->filter($annotations, RouteAbstract::class);
-            $modifiers = $this->filter($annotations, RouteModifier::class);
+                $annotations = $this->reader->getMethodAnnotations($method);
 
-            if (!is_subclass_of($route, RouteAbstract::class)) continue;
+                $routes = $this->filter($annotations, RouteAbstract::class);
+                $modifiers = $this->filter($annotations, RouteModifier::class);
 
-            $route->prepareRoute($class, $method, $cRoute, $cModifiers, $modifiers);
+                foreach ($routes as $route) {
 
-            $routes->append($route);
+                    $route->prepareRoute($class, $method, $cRoute, $cModifiers, $modifiers);
+
+                    $routeCollection->append($route);
+                }
+            }
         }
 
-        return $routes;
+        return $routeCollection;
     }
 
     /**
      * @param array $annotations
      * @param string $type
-     * @return RouteAbstract|array
+     * @return array
      */
     protected function filter(array $annotations, $type)
     {
-        $types = array_filter($annotations, function ($annotation) use ($type) {
+        return array_filter($annotations, function ($annotation) use ($type) {
             return $annotation instanceof $type;
         });
-
-        if ($type === RouteAbstract::class) {
-            return reset($types) ?: new RouteAbstract();
-        }
-        return $types;
     }
 
     /**

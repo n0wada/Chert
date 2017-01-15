@@ -11,16 +11,16 @@
 namespace Chert;
 
 use Chert\Compiler\Compiler;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\FilesystemCache;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 use Silex\Api\BootableProviderInterface;
 use Silex\Application;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Cache\FilesystemCache;
 
 /**
- * Route Anotation Provider
+ * Route Annotation Provider
  */
 class RouteCompileServiceProvider implements ServiceProviderInterface, BootableProviderInterface
 {

@@ -78,36 +78,39 @@ class CompilerTest extends BaseTestCase
     {
         $filter = $this->toPublic($this->app['chert.compiler'], 'filter');
 
+        $test = function ($annots, $type) use ($filter) {
+            $rev = $filter($annots, $type);
+            if (!is_array($rev)) $this->assertTrue(false);
+            foreach ($rev as $var) $this->assertInstanceOf($type, $var);
+        };
+
         $array = [];
         $this->assertNotTrue($filter($array, RouteAbstract::class));
 
         $annots[] = $route1 = $this->createMock(RouteAbstract::class);
 
-        $this->assertInstanceOf(RouteAbstract::class, $filter($annots, RouteAbstract::class));
+        $test($annots, RouteAbstract::class);
         $this->assertEquals([], $filter($annots, RouteModifier::class));
 
         $annots[] = $this->createMock(RouteModifier::class);
 
-        $this->assertInstanceOf(RouteAbstract::class, $filter($annots, RouteAbstract::class));
-        $rev = $filter($annots, RouteModifier::class);
-        if (!is_array($rev)) $this->assertTrue(false);
-        foreach ($rev as $var) $this->assertInstanceOf(RouteModifier::class, $var);
+        $test($annots, RouteAbstract::class);
+        $test($annots, RouteModifier::class);
 
         $annots[] = $route2 = $this->createMock(RouteAbstract::class);
 
-        $this->assertInstanceOf(RouteAbstract::class, $filter($annots, RouteAbstract::class));
-        $this->assertSame($filter($annots, RouteAbstract::class), $route1);
-        $rev = $filter($annots, RouteModifier::class);
-        if (!is_array($rev)) $this->assertTrue(false);
-        foreach ($rev as $var) $this->assertInstanceOf(RouteModifier::class, $var);
+        $test($annots, RouteAbstract::class);
+        $test($annots, RouteModifier::class);
+
+        $this->assertSame(current($filter($annots, RouteAbstract::class)), $route1);
 
         $annots[] = $this->createMock(RouteModifier::class);
 
-        $this->assertInstanceOf(RouteAbstract::class, $filter($annots, RouteAbstract::class));
-        $this->assertSame($filter($annots, RouteAbstract::class), $route1);
-        $rev = $filter($annots, RouteModifier::class);
-        if (!is_array($rev)) $this->assertTrue(false);
-        foreach ($rev as $var) $this->assertInstanceOf(RouteModifier::class, $var);
+        $test($annots, RouteAbstract::class);
+        $test($annots, RouteModifier::class);
+
+        $this->assertSame(current($filter($annots, RouteAbstract::class)), $route1);
+        $this->assertNotSame(current($filter($annots, RouteAbstract::class)), $route2);
     }
 
     public function testCompile()

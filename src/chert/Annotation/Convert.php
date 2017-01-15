@@ -10,8 +10,8 @@
 
 namespace Chert\Annotation;
 
-use Silex\Controller;
 use Silex\Application;
+use Silex\Controller;
 
 /**
  * @Annotation
