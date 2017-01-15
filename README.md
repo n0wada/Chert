@@ -10,7 +10,7 @@ Chert uses Composer to install and update:
 
 ```
   "require": {
-      n0wada/chert dev-master
+      "n0wada/chert": "dev-master"
   }
 ```
 
