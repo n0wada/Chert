@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class WebTestBase extends WebTestCase
 {
-    /** @var \Chert\RouteCompileServiceProvider */
+    /** @var \Chert\RoutingServiceProvider */
     public $provider;
 
     public function createApplication()
@@ -15,7 +15,7 @@ class WebTestBase extends WebTestCase
         $config['Chert']['chert.cache_dir'] = CACHE_DIR;
 
         $app = new Silex\Application();
-        $this->provider = new Chert\RouteCompileServiceProvider();
+        $this->provider = new Chert\RoutingServiceProvider();
         $app->register($this->provider, $config['Chert']);
 
         $this->provider->boot($app);

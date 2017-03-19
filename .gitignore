@@ -1,4 +1,5 @@
 composer.lock
 vendor
 work
+tests/cache
 phpunit-5.7.4.phar

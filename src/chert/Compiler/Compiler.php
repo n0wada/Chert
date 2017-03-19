@@ -115,7 +115,7 @@ class Compiler
     {
         $annotations = $this->reader->getClassAnnotations($class);
 
-        $cRoutes = $this->filter($annotations, RouteAbstract::class) ?: [new RouteAbstract()];
+        $cRoutes = $this->filter($annotations, RouteAbstract::class);
         $cModifiers = $this->filter($annotations, RouteModifier::class);
 
         foreach ($cRoutes as $cRoute) {

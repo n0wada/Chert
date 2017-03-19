@@ -22,7 +22,7 @@ use Silex\Application;
 /**
  * Route Annotation Provider
  */
-class RouteCompileServiceProvider implements ServiceProviderInterface, BootableProviderInterface
+class RoutingServiceProvider implements ServiceProviderInterface, BootableProviderInterface
 {
     /**
      * @param Container $app

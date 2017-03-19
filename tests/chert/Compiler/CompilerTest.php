@@ -154,7 +154,7 @@ class CompilerTest extends BaseTestCase
         $annots[] = $routeAbs;
         $annots[] = $this->createMock(RouteModifier::class);
         $reader->expects($this->once())->method('getClassAnnotations')->willReturn([]);
-        $reader->expects($this->atLeastOnce())->method('getMethodAnnotations')->willReturn([]);
+        $reader->expects($this->never())->method('getMethodAnnotations')->willReturn([]);
 
         $compiler = new Compiler($app, $reader, $cache, 0);
         $compile = $this->toPublic($compiler, 'compile');
@@ -177,7 +177,7 @@ class CompilerTest extends BaseTestCase
         $annots[] = $routeAbs;
         $annots[] = $this->createMock(RouteModifier::class);
         $reader->expects($this->once())->method('getClassAnnotations')->willReturn([]);
-        $reader->expects($this->atLeastOnce())->method('getMethodAnnotations')->willReturn([]);
+        $reader->expects($this->never())->method('getMethodAnnotations')->willReturn([]);
 
         $compiler = new Compiler($app, $reader, $cache, 0);
         $compile = $this->toPublic($compiler, 'compile');

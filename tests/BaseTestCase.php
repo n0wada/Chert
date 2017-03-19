@@ -5,7 +5,7 @@ class BaseTestCase extends TestCase
 {
     /** @var \Silex\Application */
     public $app;
-    /** @var \Chert\RouteCompileServiceProvider */
+    /** @var \Chert\RoutingServiceProvider */
     public $provider;
 
     public function setUp()
@@ -15,7 +15,7 @@ class BaseTestCase extends TestCase
     function getApp()
     {
         $this->app = new Silex\Application();
-        $this->provider = new Chert\RouteCompileServiceProvider();
+        $this->provider = new Chert\RoutingServiceProvider();
     }
 
     function bootApp()

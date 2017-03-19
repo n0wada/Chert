@@ -2,11 +2,11 @@ Chert
 ====
 
 It's an alternative to ControllerProvider for Silex application, using annotations and caching.
-
+Chert is inspired by [Orlex](https://github.com/dcousineau/orlex)
 
 ## Install
 
-Chert uses Composer to install and update:
+Chert uses Composer to install:
 
 ```
   "require": {
@@ -69,6 +69,6 @@ class TestController
 }
 ```
 
-## Licence
+## License
 
 [MIT](https://github.com/n0wada/Chert/blob/master/LICENSE)
