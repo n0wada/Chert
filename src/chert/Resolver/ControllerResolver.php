@@ -62,7 +62,7 @@ class ControllerResolver extends BaseControllerResolver
             if (is_null($class) || $class->isInstance($this->app)) {
                 $args[$parameter->getName()] = $this->app;
             } else {
-                $args[$parameter->getName()] = $class->newInstanceArgs($this->app);
+                $args[$parameter->getName()] = $class->newInstance($this->app);
             }
         }
 
