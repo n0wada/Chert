@@ -37,25 +37,23 @@ class ControllerResolver extends BaseControllerResolver
     protected function instantiateController($class)
     {
 
-        $reflection = new \ReflectionClass($class);
+        $refClass = new \ReflectionClass($class);
 
-        $args = $reflection->getConstructor();
-
-        if (!is_null($args)) {
-            $args = $this->resolveArguments($args->getParameters());
+        if (!$refClass->hasMethod('__construct')) {
+            return $refClass->newInstance();
         }
 
-        return $reflection->newInstanceArgs($args);
+        return $refClass->newInstanceArgs($this->getArgs($refClass));
     }
 
     /**
-     * @param \ReflectionParameter[] $parameters
+     * @param \ReflectionClass $refClass
      * @param array $args [optional]
-     * @return array
+     * @return array $args
      */
-    private function resolveArguments(array $parameters, array $args = null)
+    private function getArgs(\ReflectionClass $refClass, array $args = [])
     {
-        foreach ($parameters as $parameter) {
+        foreach ($refClass->getConstructor()->getParameters() as $parameter) {
 
             $class = $parameter->getClass();
 
