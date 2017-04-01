@@ -26,9 +26,8 @@ class ControllerResolver extends BaseControllerResolver
      */
     public function __construct(Application $app, LoggerInterface $logger = null)
     {
-        $this->app = $app;
-
         parent::__construct($logger);
+        $this->app = $app;
     }
 
     /**
@@ -36,34 +35,27 @@ class ControllerResolver extends BaseControllerResolver
      */
     protected function instantiateController($class)
     {
-
         $refClass = new \ReflectionClass($class);
 
         if (!$refClass->hasMethod('__construct')) {
             return $refClass->newInstance();
         }
 
-        return $refClass->newInstanceArgs($this->getArgs($refClass));
-    }
+        try {
 
-    /**
-     * @param \ReflectionClass $refClass
-     * @param array $args [optional]
-     * @return array $args
-     */
-    private function getArgs(\ReflectionClass $refClass, array $args = [])
-    {
-        foreach ($refClass->getConstructor()->getParameters() as $parameter) {
+            foreach ($params = $refClass->getConstructor()->getParameters() as $key => $param) {
 
-            $class = $parameter->getClass();
+                if (is_null($type = $param->getClass())) {
+                    throw new \InvalidArgumentException(sprintf('%s uses type declarations for injection.', self::class));
+                }
 
-            if (is_null($class) || $class->isInstance($this->app)) {
-                $args[$parameter->getName()] = $this->app;
-            } else {
-                $args[$parameter->getName()] = $class->newInstance($this->app);
+                $params[$key] = $type->isInstance($this->app) ? $this->app : $type->newInstance($this->app);
             }
+
+        } catch (\TypeError $e) {
+            throw new \InvalidArgumentException(sprintf('%s could not be instantiated. %s only injects Silex applications. If you need flexibility, please use other libraries.', $class, self::class));
         }
 
-        return $args;
+        return $refClass->newInstanceArgs($params);
     }
 }
