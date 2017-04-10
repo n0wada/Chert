@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\Reader;
 use Pimple\Container;
 use Silex\Application;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  *  Compiler Servise Class
@@ -56,7 +57,7 @@ class Compiler
         $finder = Finder::create()->files()->in($path);
 
         foreach ($finder as $file) {
-
+            /* @var SplFileInfo $file */
             $fqcn = $namespace . DIRECTORY_SEPARATOR . rtrim($file->getRelativePathname(), '.php');
 
             $routes = $this->fetch($fqcn, $file);
@@ -77,10 +78,10 @@ class Compiler
      * Fetches an RouteCollection from the cache.
      *
      * @param string $fqcn
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @return RouteCollection|bool
      */
-    protected function fetch(string $fqcn, \SplFileInfo $file)
+    protected function fetch(string $fqcn, SplFileInfo $file)
     {
         $routes = $this->cache->fetch($fqcn);
 
